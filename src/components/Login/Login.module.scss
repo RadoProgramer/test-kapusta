@@ -115,26 +115,6 @@ main.login-page::after {
 	gap: min(15px, calc(8px + (15 - 8) * ((100vw - 320px) / (772 - 320))));
 }
 
-.login__log-in-btn {
-	width: 100%;
-	padding: 15px 0;
-	border-radius: 16px;
-	text-align: center;
-
-	cursor: pointer;
-	background-color: var(--clr-accent);
-	box-shadow: 1px 3px 5px 0 rgba(255, 107, 8, 0.35);
-}
-
-.login__register-link {
-	width: 100%;
-	padding: 15px 0;
-	border-radius: 16px;
-	text-align: center;
-
-	background-color: var(--clr-background);
-	box-shadow: 1px 3px 5px 0 rgba(82, 85, 95, 0.15);
-}
 
 @media (width >= 772px) {
 	main.login-page {
@@ -198,3 +178,7 @@ main.login-page::after {
 		background-size: calc(1334px + (100vw - 1334px));
 	}
 }
+
+
+
+

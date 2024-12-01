@@ -1,3 +1,7 @@
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Login.module.scss";
 
 const Logo = () => (
@@ -19,46 +23,98 @@ const GoogleLoginButton = () => (
 	</button>
 );
 
-const InputField = ({ id, label, type, placeholder }) => (
-	<div className="login__input-container">
-		<label className="login__label" htmlFor={id}>
-			{label}
-		</label>
-		<input
-			className="login__input"
-			type={type}
-			id={id}
-			name={id}
-			placeholder={placeholder}
-			required
-		/>
-	</div>
-);
+const LoginForm = () => {
+	const initialValues = {
+		email: "",
+		password: "",
+	};
 
-const LoginForm = () => (
-	<form className="login__form">
-		<InputField
-			id="email"
-			label="Email:"
-			type="email"
-			placeholder="your@email.com"
-		/>
-		<InputField
-			id="password"
-			label="Password:"
-			type="password"
-			placeholder="Password"
-		/>
-		<div className="login__btns-container">
-			<button type="submit" className="login__log-in-btn">
-				Log In
-			</button>
-			<a href="/register" className="login__register-link">
-				Registration
-			</a>
-		</div>
-	</form>
-);
+	const validationSchema = Yup.object({
+		email: Yup.string()
+			.email("Invalid email address")
+			.required("This is a required field"),
+		password: Yup.string()
+			.min(7, "Min length 7")
+			.required("This is a required field"),
+	});
+
+	const handleSubmit = (values, { resetForm }) => {
+		toast.success("Logged in successfully!");
+		console.log("Form submitted:", values);
+		resetForm();
+	};
+
+	return (
+		<Formik
+			initialValues={initialValues}
+			validationSchema={validationSchema}
+			onSubmit={handleSubmit}
+		>
+			{({ touched, errors }) => (
+				<Form className="login__form">
+					<div className="login__input-container">
+						<label className="login__label" htmlFor="email">
+							{touched.email && errors.email && (
+								<span style={{ color: "red", marginRight: "1px" }}>*</span>
+							)}
+							Email:
+						</label>
+						<Field
+							className="login__input"
+							type="email"
+							id="email"
+							name="email"
+							placeholder="your@email.com"
+						/>
+						<ErrorMessage
+							name="email"
+							component="p"
+							style={{
+								color: "red",
+								fontSize: "0.875rem",
+								minHeight: "1.2rem", // Zarezerwowanie miejsca
+								margin: "0",
+							}}
+						/>
+					</div>
+					<div className="login__input-container">
+						<label className="login__label" htmlFor="password">
+							{touched.password && errors.password && (
+								<span style={{ color: "red", marginRight: "1px" }}>*</span>
+							)}
+							Password:
+						</label>
+						<Field
+							className="login__input"
+							type="password"
+							id="password"
+							name="password"
+							placeholder="Password"
+						/>
+						<ErrorMessage
+							name="password"
+							component="p"
+							style={{
+								color: "red",
+								fontSize: "0.875rem",
+								minHeight: "1.2rem", // Zarezerwowanie miejsca
+								margin: "0",
+							}}
+						/>
+					</div>
+					<div className="login__btns-container">
+						<button type="submit" className="login__log-in-btn">
+							Log In
+						</button>
+						<a href="/register" className="login__register-link">
+							Registration
+						</a>
+					</div>
+				</Form>
+			)}
+		</Formik>
+	);
+};
 
 const Login = () => (
 	<main className="login-page container">
@@ -75,6 +131,7 @@ const Login = () => (
 				<LoginForm />
 			</div>
 		</section>
+		<ToastContainer autoClose={2000} theme="colored" />
 	</main>
 );
 
