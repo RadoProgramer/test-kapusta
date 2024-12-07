@@ -71,9 +71,7 @@ const LoginForm = () => {
 							component="p"
 							style={{
 								color: "red",
-								fontSize: "0.875rem",
-								minHeight: "1.2rem", // Zarezerwowanie miejsca
-								margin: "0",
+								fontSize: "0.600rem",
 							}}
 						/>
 					</div>
@@ -96,9 +94,7 @@ const LoginForm = () => {
 							component="p"
 							style={{
 								color: "red",
-								fontSize: "0.875rem",
-								minHeight: "1.2rem", // Zarezerwowanie miejsca
-								margin: "0",
+								fontSize: "0.600rem",
 							}}
 						/>
 					</div>

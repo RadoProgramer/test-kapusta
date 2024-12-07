@@ -7,6 +7,8 @@ main.login-page {
 	);
 }
 
+  
+
 main.login-page::before {
 	content: "";
 	position: absolute;
@@ -114,6 +116,12 @@ main.login-page::after {
 	grid-template-columns: 1fr 1fr;
 	gap: min(15px, calc(8px + (15 - 8) * ((100vw - 320px) / (772 - 320))));
 }
+.error {
+	color: #eb5757;
+	font-size: 12px;
+	line-height: 1.2;
+	margin-top: -8px;
+  }
 
 
 @media (width >= 772px) {
