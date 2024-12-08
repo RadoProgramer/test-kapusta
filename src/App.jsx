@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SharedLayout from "./components/SharedLayout/SharedLayout";
 import MainPage from "./pages/MainPage";
-import HomePage from "./pages/HomePage"; // Import HomePage Balance
+import HomePage from "./pages/HomePage";
 
 const App = () => {
     return (
@@ -9,7 +9,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<SharedLayout />}>
                     <Route index element={<MainPage />} />
-                    <Route path="home" element={<HomePage />} /> {/* Nowa trasa */}
+                    <Route path="home" element={<HomePage />} />
                 </Route>
             </Routes>
         </Router>
