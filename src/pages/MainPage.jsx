@@ -1,7 +1,11 @@
 import Login from "../components/Login/Login";
 
 const MainPage = () => {
-	return <Login />;
+	return (
+		<div>
+			<Login />
+		</div>
+	);
 };
 
 export default MainPage;
