@@ -40,7 +40,7 @@
 
 .login__label {
     font-weight: var(--font-regular);
-    font-size: 0.625rem;
+    font-size: 12px;
     letter-spacing: 0.04em;
     color: var(--clr-titles);
 }
@@ -63,4 +63,24 @@
 
 .login__register-link {
     color: #52555f;
+}
+
+/* Modal */
+.modal__title {
+    font-size: 0.875rem;
+    font-weight: var(--font-medium);
+    color: var(--clr-primary-text);
+    text-align: center;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+}
+
+.modal__confirm-btn,
+.modal__cancel-btn {
+    font-size: 0.75rem;
+    font-weight: var(--font-bold);
+    color: var(--clr-primary-text);
+    text-align: center;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }

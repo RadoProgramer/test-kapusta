@@ -1,13 +1,11 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "./Login.module.scss";
+import logoLogin from "../../assets/images/logo/logo-login.webp";
 
 const Logo = () => (
 	<img
 		className="logo-login-title"
-		src="./src/assets/images/logo/logo-login.webp"
+		src={logoLogin}
 		alt="Kapusta, Smart Finance"
 		width="183"
 		height="63"
@@ -17,7 +15,7 @@ const Logo = () => (
 const GoogleLoginButton = () => (
 	<button className="login__google-btn" type="button">
 		<svg width="18" height="18">
-			<use href="./src/assets/images/sprite.svg#google"></use>
+			<use href="/sprite.svg#google"></use>
 		</svg>
 		Google
 	</button>
@@ -39,7 +37,6 @@ const LoginForm = () => {
 	});
 
 	const handleSubmit = (values, { resetForm }) => {
-		toast.success("Logged in successfully!");
 		console.log("Form submitted:", values);
 		resetForm();
 	};
@@ -66,14 +63,7 @@ const LoginForm = () => {
 							name="email"
 							placeholder="your@email.com"
 						/>
-						<ErrorMessage
-							name="email"
-							component="p"
-							style={{
-								color: "red",
-								fontSize: "0.600rem",
-							}}
-						/>
+						<ErrorMessage name="email" component="p" className="error" />
 					</div>
 					<div className="login__input-container">
 						<label className="login__label" htmlFor="password">
@@ -89,14 +79,7 @@ const LoginForm = () => {
 							name="password"
 							placeholder="Password"
 						/>
-						<ErrorMessage
-							name="password"
-							component="p"
-							style={{
-								color: "red",
-								fontSize: "0.600rem",
-							}}
-						/>
+						<ErrorMessage name="password" component="p" className="error" />
 					</div>
 					<div className="login__btns-container">
 						<button type="submit" className="login__log-in-btn">
@@ -127,7 +110,6 @@ const Login = () => (
 				<LoginForm />
 			</div>
 		</section>
-		<ToastContainer autoClose={2000} theme="colored" />
 	</main>
 );
 
