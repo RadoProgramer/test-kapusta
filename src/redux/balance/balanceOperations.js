@@ -1,16 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { changeBalanceApi } from "../../services/balanceApi";
 
 export const changeBalance = createAsyncThunk(
 	"balance/changeBalance",
 	async ({ newBalance }, thunkAPI) => {
 		try {
-			const response = await axios.patch("/api/balance", {
-				balance: newBalance,
-			});
-			return response.data;
+			const data = { balance: newBalance };
+			const response = await changeBalanceApi(data);
+			return response;
 		} catch (error) {
-			return thunkAPI.rejectWithValue(error.message);
+			return thunkAPI.rejectWithValue(
+				error.response?.data?.message || error.message
+			);
 		}
 	}
 );

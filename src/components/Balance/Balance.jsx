@@ -13,7 +13,11 @@ const Balance = () => {
 	const dispatch = useDispatch();
 
 	const handleChange = (e) => {
-		setInput(e.target.value);
+		const inputValue = e.target.value;
+
+		if (/^\d*\.?\d*$/.test(inputValue)) {
+			setInput(inputValue);
+		}
 	};
 
 	const handleSubmit = (e) => {
