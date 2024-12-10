@@ -1,28 +1,35 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import {
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Navigate,
+} from "react-router-dom";
 import SharedLayout from "./components/SharedLayout/SharedLayout";
-
-const MainPage = lazy(() => import("./pages/MainPage"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const ReportsPage = lazy(() => import("./pages/ReportsPage"));
+import MainPage from "./pages/MainPage";
+import HomePage from "./pages/HomePage";
+import ReportsPage from "./pages/ReportsPage";
+import { useSelector } from "react-redux";
 
 const App = () => {
+	const { email } = useSelector((state) => state.user);
+
+	console.log("Redux email in App:", email);
+
 	return (
 		<Router>
-			<Suspense fallback={<div>Loading...</div>}>
-				<Routes>
-					<Route path="/" element={<SharedLayout />}>
-						<Route index element={<MainPage />} />
-						<Route
-							path="/dashboard"
-							element={
-								localStorage.getItem("token") ? <Dashboard /> : <MainPage />
-							}
-						/>
-						<Route path="/reports" element={<ReportsPage />} />
-					</Route>
-				</Routes>
-			</Suspense>
+			<Routes>
+				<Route path="/" element={<SharedLayout />}>
+					<Route index element={<MainPage />} />
+					<Route
+						path="/home"
+						element={email ? <HomePage /> : <Navigate to="/" replace />}
+					/>
+					<Route
+						path="/reports"
+						element={email ? <ReportsPage /> : <Navigate to="/" replace />}
+					/>
+				</Route>
+			</Routes>
 		</Router>
 	);
 };

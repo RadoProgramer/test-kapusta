@@ -1,8 +1,9 @@
+import balanceReducer from "./balance/balanceReducer";
 import { configureStore } from "@reduxjs/toolkit";
-import rootReducer from "./rootReducer";
-
-const store = configureStore({
-	reducer: rootReducer,
+import userReducer from "./userSlice";
+export const store = configureStore({
+	reducer: {
+		user: userReducer,
+		balance: balanceReducer,
+	},
 });
-
-export default store;
