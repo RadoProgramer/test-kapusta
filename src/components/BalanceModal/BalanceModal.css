@@ -38,7 +38,7 @@
 	.modalWindow {
 		position: absolute;
 		top: calc(50% + 120px);
-		left: calc(50% + 50px);
+		left: calc(50% + 105px);
 		transform: translate(-50%, -50%);
 		z-index: 10;
 	}
