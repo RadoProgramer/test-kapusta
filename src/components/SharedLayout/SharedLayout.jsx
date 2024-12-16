@@ -26,12 +26,24 @@ const SharedLayout = () => {
 				});
 
 				const { email, balance } = response.data;
+
 				dispatch(login({ email }));
 				dispatch(updateBalance(balance));
+
+				console.log("User data and balance loaded from backend:", {
+					email,
+					balance,
+				});
 			} catch (error) {
-				console.error("Error fetching user data:", error);
-				dispatch(logout());
-				navigate("/");
+				console.error("Error fetching user data or balance:", error);
+
+				if (error.response?.status === 401) {
+					console.log("Unauthorized. Logging out...");
+					dispatch(logout());
+					localStorage.removeItem("token");
+					localStorage.removeItem("user");
+					navigate("/");
+				}
 			}
 		};
 

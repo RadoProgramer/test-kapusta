@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { changeBalance, addIncome, addExpense } from "./balanceOperations";
+import { changeBalance } from "./balanceOperations";
 
 const balanceSlice = createSlice({
 	name: "balance",
@@ -11,7 +11,6 @@ const balanceSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
-			// Change Balance
 			.addCase(changeBalance.pending, (state) => {
 				state.loading = true;
 				state.error = null;
@@ -23,15 +22,8 @@ const balanceSlice = createSlice({
 			.addCase(changeBalance.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
-			})
-			// Add Income
-			.addCase(addIncome.fulfilled, (state, action) => {
-				state.balance = action.payload;
-			})
-			// Add Expense
-			.addCase(addExpense.fulfilled, (state, action) => {
-				state.balance = action.payload;
 			});
+			
 	},
 });
 
