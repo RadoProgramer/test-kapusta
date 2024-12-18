@@ -34,7 +34,7 @@
 
 .input-balance {
 	width: 140px;
-	height: 44px;
+	height: 36px;
 	border: 2px solid #e0e0e0;
 	border-radius: 16px 0 0 16px;
 	text-align: center;
@@ -46,12 +46,13 @@
 	border-right: none;
 }
 
-.input-balance:hover {
+.input-balance:focus {
 	border-color: var(--clr-accent);
+	border-right: none;
 }
 
 .button-balance {
-	height: 44px;
+	height: 36px;
 	padding: 0 20px;
 	border: 2px solid #e0e0e0;
 	border-left: none;
@@ -60,14 +61,22 @@
 	font-weight: 400;
 	color: rgba(82, 85, 95, 0.7);
 	background-color: transparent;
+	cursor: not-allowed;
 	transition: all 0.3s ease;
 	width: 140px;
 	text-align: center;
 }
-.button-balance:hover {
-	border-color: var(--clr-accent);
+
+.buttonActive-balance {
 	background-color: var(--clr-accent);
 	color: #ffffff;
+	cursor: pointer;
+	border-color: var(--clr-accent);
+}
+
+.buttonActive-balance:hover {
+	background-color: #ff5400;
+	border-color: #ff5400;
 }
 
 .separator {
@@ -98,7 +107,8 @@
 	}
 
 	.input-balance {
-		width: 125px;
+		width: 113px;
+		height: 36px;
 		border: 2px solid #e0e0e0;
 		border-radius: 16px;
 		text-align: center;
@@ -112,13 +122,22 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 125px;
+		width: 113px;
+		height: 36px;
 		border: 2px solid #e0e0e0;
 		border-radius: 16px;
 		font-size: 12px;
 		background-color: transparent;
 		color: rgba(82, 85, 95, 0.7);
+		cursor: not-allowed;
 		transition: all 0.3s ease;
+	}
+
+	.buttonActive-balance {
+		background-color: var(--clr-accent);
+		color: #ffffff;
+		cursor: pointer;
+		border-color: var(--clr-accent);
 	}
 
 	.separator {
@@ -135,6 +154,7 @@
 
 	.input-balance,
 	.button-balance {
+		width: 113px;
 		font-size: 12px;
 	}
 
