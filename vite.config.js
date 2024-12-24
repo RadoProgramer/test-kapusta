@@ -7,24 +7,7 @@ export default defineConfig({
   build: {
     sourcemap: true,
     alias: {
-      "@": "/src" // Alias dla folderu `src`
-    }
-  }
+      "@": "/src", // Alias dla folderu `src`
+    },
+  },
 });
-
-
-// import { defineConfig } from 'vite';
-// import react from '@vitejs/plugin-react';
-
-// export default defineConfig({
-//   plugins: [react()],
-//   server: {
-//     proxy: {
-//       '/user': {
-//         target: 'http://localhost:3000', // Adres backendu
-//         changeOrigin: true,
-//         secure: false,
-//       },
-//     },
-//   },
-// });

@@ -1,30 +1,57 @@
-import React from "react";
+import "./Summary.css";
 
 const Summary = ({ data }) => {
-  const monthlySummary = data.reduce((acc, entry) => {
-    const month = new Date(entry.date).toLocaleString("en-US", {
-      month: "long",
-    });
+  const formatNumber = (number) => {
+    return Math.abs(number)
+      .toFixed(2)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  };
 
-    if (!acc[month]) {
-      acc[month] = 0;
-    }
+  const monthlySummary =
+    data?.reduce((acc, entry) => {
+      const date = new Date(entry.date);
+      const month = date
+        .toLocaleString("en-US", { month: "long" })
+        .toUpperCase();
+      const year = date.getFullYear();
+      const key = `${year}-${month}`;
 
-    acc[month] += entry.amount;
+      if (!acc[key]) {
+        acc[key] = {
+          year,
+          month,
+          total: 0,
+        };
+      }
 
-    return acc;
-  }, {});
+      acc[key].total += entry.amount;
+
+      return acc;
+    }, {}) || {};
+
+  const summaryData = Object.values(monthlySummary);
+  const emptyRows = Math.max(6 - summaryData.length, 0);
+  const fillerRows = Array(emptyRows).fill({
+    year: "",
+    month: "",
+    total: "",
+  });
 
   return (
-    <div>
-      <h3>SUMMARY</h3>
-      <ul>
-        {Object.entries(monthlySummary).map(([month, total]) => (
-          <li key={month}>
-            {month}: {total.toFixed(2)}
-          </li>
+    <div className="summary-container">
+      <h2 className="summary-title">SUMMARY</h2>
+      <div className="summary-content">
+        {[...summaryData, ...fillerRows].map((item, index) => (
+          <div key={index} className="summary-row">
+            <span className="summary-year">{item.year}</span>
+            <span className="summary-month">{item.month}</span>
+            <span className="summary-amount">
+              {item.total ? formatNumber(item.total) : ""}
+            </span>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

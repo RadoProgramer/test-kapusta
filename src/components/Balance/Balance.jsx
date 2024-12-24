@@ -1,206 +1,152 @@
-// import { useState, useEffect } from "react";
-// import { toast } from "react-toastify";
-// import { BalanceModal } from "../BalanceModal/BalanceModal";
-// import "./Balance.css";
-
-// const Balance = () => {
-//   const [balance, setBalance] = useState(0);
-//   const [input, setInput] = useState("");
-//   const [showModal, setShowModal] = useState(true);
-
-//   useEffect(() => {
-//     const storedBalance = localStorage.getItem("balance");
-//     if (storedBalance) {
-//       setBalance(parseFloat(storedBalance));
-//     }
-//   }, []);
-
-//   const handleChange = (e) => {
-//     const inputValue = e.target.value;
-//     if (/^\d*\.?\d*$/.test(inputValue)) {
-//       setInput(inputValue);
-//     }
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const newBalance = parseFloat(input);
-
-//     if (isNaN(newBalance) || newBalance <= 0) {
-//       toast.error("Please enter a valid balance!", {
-//         autoClose: 2000,
-//         theme: "colored"
-//       });
-//       return;
-//     }
-
-//     setBalance(newBalance);
-//     localStorage.setItem("balance", newBalance);
-
-//     setInput("");
-//     setShowModal(false);
-//     toast.success("Balance updated successfully!", {
-//       autoClose: 2000,
-//       theme: "colored"
-//     });
-//   };
-
-//   return (
-//     <div className="container-balance">
-//       {showModal && balance === 0 && <BalanceModal />}
-//       <div className="balanceWrapper">
-//         <span className="label-balance">Balance:</span>
-//         <div className="balance">
-//           <span className="balance-value">{balance.toFixed(2)} EUR</span>
-//           <form onSubmit={handleSubmit} className="form-balance">
-//             <input
-//               type="text"
-//               className="input-balance"
-//               value={input}
-//               onChange={handleChange}
-//               placeholder="00.00 EUR"
-//             />
-//             <div className="separator"></div>
-//             <button
-//               type="submit"
-//               className={`button-balance ${
-//                 input ? "buttonActive-balance" : ""
-//               }`}
-//             >
-//               CONFIRM
-//             </button>
-//           </form>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Balance;
-
-
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
+import API_URL from "../../../api/apiConfig";
 import "./Balance.css";
 import { BalanceModal } from "../BalanceModal/BalanceModal";
 
 const Balance = () => {
-  const [balance, setBalance] = useState(null);
-  const [input, setInput] = useState("");
-  const [showModal, setShowModal] = useState(true);
+	const [input, setInput] = useState("00.00");
+	const [isEditing, setIsEditing] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+	const [loading, setLoading] = useState(false);
 
-  // Pobieranie balance użytkownika z backendu
-  useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("/user", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const { balance } = response.data;
-        setBalance(balance);
-        setInput(balance ? balance.toFixed(2) : "00.00");
-      } catch (error) {
-        console.error("Error fetching balance:", error.message);
-        toast.error("Failed to fetch balance!");
-      }
-    };
+	useEffect(() => {
+		const fetchBalance = async () => {
+			setLoading(true);
+			try {
+				const token = localStorage.getItem("token");
+				const response = await fetch(`${API_URL}/user`, {
+					method: "GET",
+					headers: { Authorization: `Bearer ${token}` },
+				});
 
-    fetchBalance();
-  }, []);
+				if (!response.ok) {
+					throw new Error("Failed to fetch balance");
+				}
 
-  const handleChange = (e) => {
-    const inputValue = e.target.value.replace(" EUR", "");
-    if (/^\d*\.?\d*$/.test(inputValue)) {
-      setInput(inputValue);
-    }
-  };
+				const data = await response.json();
+				const balance = parseFloat(data.balance);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newBalance = parseFloat(input);
+				if (isNaN(balance)) {
+					setInput("00.00");
+					setShowModal(true);
+				} else {
+					setInput(balance.toFixed(2));
+					setShowModal(balance === 0);
+				}
+			} catch (error) {
+				console.error("Error fetching balance:", error.message);
+				toast.error("Failed to fetch balance!");
+				setInput("00.00");
+			} finally {
+				setLoading(false);
+			}
+		};
 
-    if (isNaN(newBalance) || newBalance <= 0) {
-      toast.error("Please enter a valid balance!", {
-        autoClose: 2000,
-        theme: "colored",
-      });
-      return;
-    }
+		fetchBalance();
+	}, []);
 
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.patch(
-        "/user/balance",
-        { newBalance },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+	const handleChange = (e) => {
+		const inputValue = e.target.value.replace(" EUR", "");
+		if (/^\d*\.?\d*$/.test(inputValue) || inputValue === "") {
+			setInput(inputValue);
+		}
+	};
 
-      setBalance(response.data.balance);
-      setInput(response.data.balance.toFixed(2));
-      setShowModal(false);
-      document.activeElement.blur();
+	const handleFocus = () => {
+		if (input === "00.00") {
+			setInput("");
+		}
+		setIsEditing(true);
+	};
 
-      toast.success("Balance updated successfully!", {
-        autoClose: 2000,
-        theme: "colored",
-      });
-    } catch (error) {
-      console.error("Error updating balance:", error.message);
-      toast.error("Failed to update balance!");
-    }
-  };
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		const newBalance = parseFloat(input);
 
-  const handleInputFocus = () => {
-    if (input === "00.00") {
-      setInput("");
-    }
-  };
+		if (isNaN(newBalance) || newBalance <= 0) {
+			toast.error("Please enter a valid balance!", {
+				autoClose: 2000,
+				theme: "colored",
+			});
+			return;
+		}
 
-  const handleInputBlur = () => {
-    if (input === "" && balance === null) {
-      setInput("00.00");
-    }
-  };
+		try {
+			setLoading(true);
+			const token = localStorage.getItem("token");
+			const response = await fetch(`${API_URL}/user/balance`, {
+				method: "PATCH",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ newBalance }),
+			});
 
-  const handleInputClick = (e) => {
-    const inputElement = e.target;
-    const numberLength = inputElement.value.replace(" EUR", "").length;
-    setTimeout(() => {
-      inputElement.setSelectionRange(numberLength, numberLength);
-    }, 0);
-  };
+			if (!response.ok) {
+				throw new Error("Failed to update balance");
+			}
 
-  return (
-    <div className="container-balance">
-      {showModal && balance === null && <BalanceModal />}
-      <div className="balanceWrapper">
-        <span className="label-balance">Balance:</span>
-        <form onSubmit={handleSubmit} className="form-balance">
-          <div className="input-container">
-            <input
-              type="text"
-              className="input-balance"
-              value={`${input} EUR`}
-              onChange={handleChange}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
-              onClick={handleInputClick}
-              placeholder="00.00 EUR"
-            />
-          </div>
-          <div className="separator"></div>
-          <button
-            type="submit"
-            className={`button-balance ${input ? "buttonActive-balance" : ""}`}
-          >
-            CONFIRM
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+			const data = await response.json();
+			const updatedBalance = parseFloat(data.balance);
+
+			if (isNaN(updatedBalance)) {
+				throw new Error("Invalid balance returned from server");
+			}
+
+			setInput(updatedBalance.toFixed(2));
+			setIsEditing(false);
+			setShowModal(false);
+			document.activeElement.blur();
+
+			toast.success("Balance updated successfully!", {
+				autoClose: 2000,
+				theme: "colored",
+			});
+		} catch (error) {
+			console.error("Error updating balance:", error.message);
+			toast.error(error.message || "Failed to update balance!");
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	return (
+		<div className="balance__container">
+			<form onSubmit={handleSubmit} className="balance__form">
+				<label className="balance__label" htmlFor="balance">
+					Balance:
+				</label>
+				<div className="balance__input-container">
+					{showModal && <BalanceModal />}
+					<div className="balance__input_wrapper">
+						{loading ? (
+							<div className="balance__spinner"></div>
+						) : (
+							<input
+								className="balance__input"
+								id="balance"
+								type="text"
+								value={
+									isEditing ? input : `${parseFloat(input).toFixed(2)} EUR`
+								}
+								onChange={handleChange}
+								onFocus={handleFocus}
+								placeholder="00.00 EUR"
+							/>
+						)}
+					</div>
+					<button
+						type="submit"
+						className={`button-balance ${input ? "buttonActive-balance" : ""}`}
+					>
+						CONFIRM
+					</button>
+				</div>
+			</form>
+		</div>
+	);
 };
 
 export default Balance;
